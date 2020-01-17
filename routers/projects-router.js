@@ -48,7 +48,13 @@ router.delete("/:id", validateId, (req, res) => {
     });
 });
 
-router.get("/:projectId", (req, res) => {});
+router.get("/:projectId/actions", (req, res) => {
+  Projects.getProjectActions(req.params.projectId)
+    .then(actions => res.status(200).json(actions))
+    .catch(err => {
+      res.status(500).json({ message: "something went wrong" });
+    });
+});
 
 //middleware
 function validateProect(req, res, next) {
