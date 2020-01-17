@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
+router.post("/", validateAction, (req, res) => {
   Actions.insert(req.body)
     .then(newAction => {
       res.status(200).json(newAction);
@@ -43,5 +43,17 @@ router.delete("/:id", (req, res) => {
       res.status(500).json({ message: "something went wrong" });
     });
 });
+
+//middleware
+function validateAction(req, res, next) {
+  console.log("inside validateAction");
+  if (Object.keys(req.body).length === 0) {
+    res.status(400).json({ message: "please include action" });
+  } else if (!req.body.description || !req.body.notes) {
+    res.status(400).json({ message: "both description and notes required" });
+  } else {
+    next();
+  }
+}
 
 module.exports = router;
