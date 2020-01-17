@@ -38,6 +38,18 @@ router.put("/:id", validateProect, (req, res) => {
     });
 });
 
+router.delete("/:id", validateProjectId, (req, res) => {
+  Projects.remove(req.params.id)
+    .then(deleted => {
+      res.status(200).json(deleted);
+    })
+    .catch(err => {
+      res.status(500).json({ message: "something went wrong" });
+    });
+});
+
+router.get("/:projectId", (req, res) => {});
+
 //middleware
 function validateProect(req, res, next) {
   console.log("inside validateProject");
