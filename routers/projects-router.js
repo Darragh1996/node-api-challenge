@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/:id", validateProjectId, (req, res) => {
+router.get("/:id", validateId, (req, res) => {
   res.status(200).json(req.getProject);
 });
 
@@ -38,7 +38,7 @@ router.put("/:id", validateProect, (req, res) => {
     });
 });
 
-router.delete("/:id", validateProjectId, (req, res) => {
+router.delete("/:id", validateId, (req, res) => {
   Projects.remove(req.params.id)
     .then(deleted => {
       res.status(200).json(deleted);
@@ -63,7 +63,7 @@ function validateProect(req, res, next) {
   }
 }
 
-function validateProjectId(req, res, next) {
+function validateId(req, res, next) {
   console.log("inside validateProjectId");
   Projects.get(req.params.id)
     .then(project => {
