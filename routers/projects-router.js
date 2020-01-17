@@ -14,8 +14,12 @@ router.get("/", (req, res) => {
     });
 });
 
+router.get("/:id", validateProjectId, (req, res) => {
+  res.status(200).json(req.getProject);
+});
+
 router.post("/", validateProect, (req, res) => {
-  Projects.insert(req.user)
+  Projects.insert(req.project)
     .then(newProject => {
       res.status(201).json(newProject);
     })
@@ -42,9 +46,25 @@ function validateProect(req, res, next) {
   } else if (!req.body.name || !req.body.description) {
     res.status(400).json({ message: "both name and description required" });
   } else {
-    req.user = req.body;
+    req.project = req.body;
     next();
   }
+}
+
+function validateProjectId(req, res, next) {
+  console.log("inside validateProjectId");
+  Projects.get(req.params.id)
+    .then(project => {
+      if (project === null) {
+        res.status(404).json({ message: `no project at ${req.params.id}` });
+      } else {
+        req.getProject = project;
+        next();
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ message: "something went wrong" });
+    });
 }
 
 module.exports = router;
